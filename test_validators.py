@@ -24,8 +24,8 @@ def test_password_rules(password,expected):
 @pytest.mark.parametrize("password, expected",[("Passwo1",False),("Passwor6",True),("Password1",True),
                                                ("Passwordpasswo1",True),("Passwordpasswor6",True),
                                                ("Passwordpassword1",False),("Passwordpassw",False),
-                                               ("passwordpass1",False),
-                                               ("pass",True)]) #this password should return false but testing error.
+                                               ("passwordpass1",False)])#,
+                                               #("pass",True)]) #this password should return false but testing error.
 
 def test_password_rules2(password,expected):
     assert is_valid_password(password) == expected

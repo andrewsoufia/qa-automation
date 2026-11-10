@@ -2,7 +2,6 @@
 
 import pytest
 
-
 @pytest.fixture
 def booking():
     return {"firstname": "Test",

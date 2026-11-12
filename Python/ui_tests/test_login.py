@@ -1,9 +1,12 @@
 
 
 import pytest
+from pages.inventory_page import InventoryPage
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
+
+from pages.login_page import LoginPage
 
 def test_valid_login(driver):
     driver.find_element(By.ID,"user-name").send_keys("standard_user")
@@ -38,6 +41,7 @@ def test_wrong_password(driver):
     assert "Username and password do not match" in text
 
 
+# function written as POM below.
 #code below combines all 3 functions above in 1 test with 1 more addition: Empty Password.
 @pytest.mark.parametrize("username, password, expected",[("locked_out_user","secret_sauce","locked out"),
                                                           ("","secret_sauce", "Username is required"),
@@ -45,10 +49,9 @@ def test_wrong_password(driver):
                                                           ("standard_user","", "Password is required")],
                                                           ids=["lockedOutUser","Empty Username","Wrong Password","Empty Password"])
 def test_login_errors(driver,username,password,expected):
-    driver.find_element(By.ID, "user-name").send_keys(username)
-    driver.find_element(By.ID, "password").send_keys(password)
-    driver.find_element(By.ID, "login-button").click()
-    text = driver.find_element(By.CSS_SELECTOR, "[data-test='error']").text
+    page = LoginPage(driver)
+    page.login(username,password)
+    text = page.error_text()
     assert expected in text
 
 
@@ -61,9 +64,39 @@ def test_login_errors(driver,username,password,expected):
                                                        ids=["StandardUser","ProblemUser",
                                                             "GlitchUser","VisualUser","ErrorUser"])
 def test_valid_login_all_users(driver,username,password,expected):
-    driver.find_element(By.ID,"user-name").send_keys(username)
-    driver.find_element(By.ID,"password").send_keys(password)
-    driver.find_element(By.ID,"login-button").click()
-
-    text = WebDriverWait(driver,10).until(EC.visibility_of_element_located((By.CLASS_NAME,"title"))).text
+    page = LoginPage(driver)
+    page.login(username,password)
+    inv_page = InventoryPage(driver)
+    text = inv_page.title()
     assert expected == text
+
+
+# #code below combines all 3 functions above in 1 test with 1 more addition: Empty Password.
+# @pytest.mark.parametrize("username, password, expected",[("locked_out_user","secret_sauce","locked out"),
+#                                                           ("","secret_sauce", "Username is required"),
+#                                                           ("standard_user","secret_sauce1", "Username and password do not match"),
+#                                                           ("standard_user","", "Password is required")],
+#                                                           ids=["lockedOutUser","Empty Username","Wrong Password","Empty Password"])
+# def test_login_errors(driver,username,password,expected):
+#     driver.find_element(By.ID, "user-name").send_keys(username)
+#     driver.find_element(By.ID, "password").send_keys(password)
+#     driver.find_element(By.ID, "login-button").click()
+#     text = driver.find_element(By.CSS_SELECTOR, "[data-test='error']").text
+#     assert expected in text
+
+
+
+# @pytest.mark.parametrize("username,password,expected",[("standard_user","secret_sauce", "Products"),
+#                                                        ("problem_user","secret_sauce", "Products"),
+#                                                        ("performance_glitch_user","secret_sauce", "Products"),
+#                                                        ("visual_user","secret_sauce", "Products"),
+#                                                        ("error_user","secret_sauce", "Products")],
+#                                                        ids=["StandardUser","ProblemUser",
+#                                                             "GlitchUser","VisualUser","ErrorUser"])
+# def test_valid_login_all_users(driver,username,password,expected):
+#     driver.find_element(By.ID,"user-name").send_keys(username)
+#     driver.find_element(By.ID,"password").send_keys(password)
+#     driver.find_element(By.ID,"login-button").click()
+
+#     text = WebDriverWait(driver,10).until(EC.visibility_of_element_located((By.CLASS_NAME,"title"))).text
+#     assert expected == text

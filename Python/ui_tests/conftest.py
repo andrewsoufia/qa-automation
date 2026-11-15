@@ -5,9 +5,22 @@ from selenium import webdriver
 from selenium.webdriver.common.by import By
 
 
+def pytest_addoption(parser):
+    parser.addoption("--browser", default="chrome")
+
+
+
 @pytest.fixture
-def driver():
-    driver = webdriver.Chrome()
+def driver(request):
+    browser = request.config.getoption("--browser")
+    if (browser == "edge"):
+        driver = webdriver.Edge()
+    elif (browser == "firefox"):
+        driver = webdriver.Firefox()
+    elif (browser == "chrome"):
+        driver = webdriver.Chrome()
+    else:
+        raise ValueError("ERROR invalid browser name..")
     driver.get("https://www.saucedemo.com")
     yield driver
     driver.quit()

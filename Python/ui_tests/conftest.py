@@ -6,13 +6,13 @@ from selenium.webdriver.common.by import By
 
 
 def pytest_addoption(parser):
-    parser.addoption("--browser", default="chrome")
+    parser.addoption("--selenium-browser", default="chrome")
 
 
 
 @pytest.fixture
 def driver(request):
-    browser = request.config.getoption("--browser")
+    browser = request.config.getoption("--selenium-browser")
     if (browser == "edge"):
         driver = webdriver.Edge()
     elif (browser == "firefox"):

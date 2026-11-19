@@ -124,8 +124,9 @@ def test_saved_items_when_continue_shopping(logged_in_as_standard): #Continue sh
     assert ( text == "Products" ) # and also check the cart contents in local storage matches the cart items
 
 
+#automated test for one of the bugs i found on saucedemo.com
 @pytest.mark.xfail(reason="BUG-015 from the bug report: Checkout with an empty cart isnt being blocked")
-def test_checkout_with_empty_cart(logged_in_as_standard): #Test 6 is missing. Automate a checkout bug from your own bug reports and mark it xfail with that bug id in the reason. Your fixture logs in as standard_user, so pick a bug that happens for standard_user
+def test_checkout_with_empty_cart(logged_in_as_standard):
     
     inv_page = InventoryPage(logged_in_as_standard)
     inv_page.go_to_cart()
